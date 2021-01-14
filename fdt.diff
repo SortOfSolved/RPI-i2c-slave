@@ -1,0 +1,45 @@
+Notes on how the dts files are modified,
+terrible way of doing this.
+please don't treat this as a patch!
+--- a/arch/arm/boot/dts/bcm2710-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2710-rpi-3-b.dts
+@@ -32,6 +32,11 @@
+ 		brcm,pins = <8 7>;
+ 		brcm,function = <1>; /* output */
+ 	};
++	
++	i2cs_pins: i2cslv {
++		brcm,pins = < 18 19 17 27 22>;
++		brcm,function = < 7 7 1 1 1 >;//Bcm's function numberinf is eccentric!
++		};
+ 
+ 	i2c0_pins: i2c0 {
+ 		brcm,pins = <0 1>;
+@@ -143,6 +148,10 @@
+ 	};
+ };
+ 
++&i2cslv {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2cs_pins>;
++};
+ &i2c0if {
+ 	clock-frequency = <100000>;
+ };
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -340,6 +340,14 @@
+ 			status = "disabled";
+ 		};
+ 
++		i2cslv: i2cslv@7e214000 {
++			compatible = "brcm,i2c-slave";
++			reg = <0x7e214000  0x1000>;
++			interrupts = <2 11>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
++			status = "okay";
++		};
++
+ 		i2c0if: i2c@7e205000 {
+ 			compatible = "brcm,bcm2835-i2c";
+ 			reg = <0x7e205000 0x200>;

@@ -1,0 +1,2 @@
+module:
+	$(MAKE) M=$$PWD -C $$LINUX_DIR ARCH=$$KERNEL_ARCH 
